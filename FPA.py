@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 # Berem datoteko
-excel_file = 'data.xlsx'
+excel_file = 'Data/data.xlsx'
 df = pd.read_excel(excel_file)
 # število vrstic pred filtracijo log P > 1 in log P < -1
 print(len(df))
@@ -37,7 +37,7 @@ dict_biologicalProcess = {}
 # vsaka funkcija posamično
 os.makedirs(output_dir, exist_ok=True)
 for column in df.columns:
-    if column == 'Gene_Names_prim9ary':
+    if column == 'Gene_Names_primary':
         name_array = df[column]
     if column == 'GO_cellCompartment':
         for id, cell in enumerate(name_array):
