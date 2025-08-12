@@ -3,11 +3,11 @@
 Simple python skripta, ki filtrira podatke iz excel tabele v lažje berljive txt tabele
 
 ---
-Potrebne knjižnice (pip):
+## Potrebne knjižnice (pip):
 - pandas
 - openpyxl
 
-Navodila za uporabo:
+## Navodila za uporabo:
 1. V mapo Data vstavite podatke v excel datoteki
 2. Datoteko preimenujte v "data.xlsx"
 3. Poženite program FPA.py
