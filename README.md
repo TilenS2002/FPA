@@ -11,4 +11,4 @@ Simple python skripta, ki filtrira podatke iz excel tabele v lažje berljive txt
 1. V mapo Data vstavite excel datoteko
 2. Datoteko preimenujte v "data.xlsx"
 3. Poženite program FPA.py
-4. V mapi Results bodo ustvarjene 3 različne .txt datoteke, vsaka za posamezno funkcijo
+4. V mapi Results bodo ustvarjene 3 različne .xlsx datoteke, vsaka za posamezno funkcijo
