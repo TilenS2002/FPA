@@ -8,7 +8,7 @@
 - openpyxl
 
 ## Navodila za uporabo:
-1. V mapo Data vstavite excel datoteko
+1. V mapo s FPA.py skripto vstavite excel datoteko
 2. Datoteko preimenujte v "data.xlsx"
 3. Poženite program FPA.py
 4. V mapi Results bodo ustvarjene 3 različne .xlsx datoteke, vsaka za posamezno funkcijo
