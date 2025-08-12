@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 # Berem datoteko
-excel_file = 'Data/data.xlsx'
+excel_file = 'data.xlsx'
 df = pd.read_excel(excel_file)
 # število vrstic pred filtracijo log P > 1 in log P < -1
 print(len(df))
