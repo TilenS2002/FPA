@@ -2,7 +2,7 @@ import pandas as pd
 import os
 
 # Berem datoteko
-excel_file = './data.xlsx'
+excel_file = 'Data/data.xlsx'
 df = pd.read_excel(excel_file)
 # število vrstic pred filtracijo log P > 1 in log P < -1
 print(len(df))
@@ -15,13 +15,13 @@ output_dir = 'Results'
 # Množica besed lastnosti celic v posamičnih funkcijah
 set_cellCompartment = set(['granule', 'extracellular matrix', 'ECM', 'membrane', 'cell surface', 'Golgi', 'endoplasmic reticulum', 'ER', 'lysosome', 'lysosomal', 'alpha granule', 'dense granule', 'exosome', 'cytosol', 'cytoplasm', 'cytoskeleton', 'extracellular', 'mitochondrial', 'mitochondria', 'nucleus', 'nucleoplasm', 'immunoglobulin', 'blood microparticle'])
 set_molecularFunction = set(['peptidase', 'peptidase activity', 'chemokine', 'chemokine activity', 'heparanase', 'heparin', 'integrin', 'growth factor', 'antigen', 'immunoglobulin', 'immune', 'immune receptor', 'complement', 'adenylate kinase', 'ATP', 'actin', 'metalloendopeptidase activity', 'metalloendopeptidase', 'metal ion'])
-set_biologicalProcess = set(['immune response', 'immune', 'MHC', 'inflammatory', 'monocyte', 'macrophage', 'vascular', 'blood', 'angiogenesis', 'coagulation', 'platelet aggregation', 'platelet activation', 'chemotaxis', 'cell proliferation', 'migration', 'cell division', 'nerve', 'nervous', 'neuron', 'microglia', 'signaling pathway', 'metabolic process', 'cytokine', 'chemokine', 'interleukin', 'extracellular matrix'])
+set_biologicalProcess = set(['immune response', 'immune', 'MHC', 'complement', 'inflammatory', 'monocyte', 'macrophage', 'vascular', 'blood', 'angiogenesis', 'coagulation', 'platelet aggregation', 'platelet activation', 'chemotaxis', 'cell proliferation', 'cell division', 'invasion', 'migration', 'nerve', 'nervous', 'neuron', 'microglia', 'signaling pathway', 'metabolic process', 'cytokine', 'chemokine', 'interleukin'])
 
 table_cellCompartment = ['granule', 'extracellular matrix', 'membrane', 'Golgi', 'endoplasmic reticulum', 'lysosome', 'alpha granule', 'dense granule', 'exosome', 'cytosol', 'extracellular', 'mitochondria', 'nucleus', 'immunoglobulin', 'blood microparticle']
 # pobrisu , 'ECM', 'cell surface', 'ER', 'lysosomal', 'cytoplasm', 'cytoskeleton''mitochondrial', , 'nucleoplasm'
 table_molecularFunction = ['peptidase', 'chemokine', 'heparanase', 'integrin', 'growth factor', 'immunoglobulin', 'adenylate kinase', 'actin', 'metalloendopeptidase activity']
 # pobrisu , 'peptidase activity', 'chemokine activity', 'heparin''antigen',, 'immune', 'immune receptor', 'complement', 'ATP', 'metalloendopeptidase', 'metal ion'
-table_biologicalProcess = ['immune response', 'inflammatory', 'macrophage', 'vascular', 'platelet aggregation', 'chemotaxis', 'cell proliferation', 'nerve', 'signaling pathway', 'metabolic process', 'cytokine', 'extracellular matrix']
+table_biologicalProcess = ['immune response', 'inflammatory', 'vascular', 'angiogenesis', 'platelet aggregation', 'chemotaxis', 'cell proliferation', 'invasion', 'nerve', 'microglia', 'signaling pathway', 'metabolic process', 'cytokine']
 # pobrisu, 'immune', 'MHC', 'monocyte', 'blood', 'angiogenesis', 'coagulation', 'platelet activation', 'migration', 'cell division' 'nervous', 'neuron', 'microglia' 'chemokine', 'interleukin'
 
 name_array = []
@@ -198,6 +198,39 @@ for canonical, synonyms in property_synonyms.items():
     for synonym in synonyms:
         synonym_to_canonical[synonym] = canonical
 
+# Preslikava lastnosti z istim pomenom v izbrana imena stolpcev
+property_synonyms_biological = {
+    'extracellular matrix': ['extracellular matrix', 'ECM'],
+    'membrane': ['membrane', 'cell surface'],
+    'endoplasmic reticulum': ['endoplasmic reticulum', 'ER'],
+    'lysosome': ['lysosome', 'lysosomal'],
+    'cytosol': ['cytosol', 'cytoplasm', 'cytoskeleton'],
+    'mitochondria': ['mitochondria', 'mitochondrial'],
+    'nucleus': ['nucleus', 'nucleoplasm'],
+    'peptidase': ['peptidase', 'peptidase activity'],
+    'chemokine': ['chemokine', 'chemokine activity'],
+    'heparanase': ['heparanase', 'heparin'],
+    'antigen': ['antigen', 'immunoglobulin', 'immune', 'immune receptor', 'complement'],
+    'adenylate kinase': ['adenylate kinase', 'ATP'],
+    'metalloendopeptidase activity': ['metalloendopeptidase activity', 'metalloendopeptidase', 'metal ion'],
+    'immune response': ['immune response', 'immune', 'MHC'],
+    'monocyte': ['monocyte', 'macrophage'],
+    'vascular': ['vascular', 'blood', 'angiogenesis', 'coagulation'],
+    'angiogenesis': ['angiogenesis'],
+    'platelet aggregation': ['platelet aggregation', 'platelet activation'],
+    'cell proliferation': ['cell proliferation', 'cell division'],
+    'invasion': ['migration', 'invasion'],
+    'nerve': ['nerve', 'nervous', 'neuron'],
+    'microglia': ['microglia'],
+    'cytokine': ['cytokine', 'chemokine', 'interleukin']
+}
+
+synonym_to_canonical_biological = {}
+for canonical, synonyms in property_synonyms_biological.items():
+    for synonym in synonyms:
+        synonym_to_canonical_biological[synonym] = canonical
+
+
 # Excel - GO_cellCompartment markers
 table = []
 for gene in name_array:
@@ -236,7 +269,7 @@ for gene in name_array:
     row = [gene]
     gene_properties = set()
     for prop in dict_biologicalProcess.get(gene, []):
-        canonical = synonym_to_canonical.get(prop, prop)
+        canonical = synonym_to_canonical_biological.get(prop, prop)
         gene_properties.add(canonical)
     for property in table_biologicalProcess:
         row.append('X' if property in gene_properties else ' ')
